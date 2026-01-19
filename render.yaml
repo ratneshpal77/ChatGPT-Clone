@@ -1,0 +1,6 @@
+services:
+  - type: static
+    name: sigmagpt-frontend
+    rootDir: Frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
