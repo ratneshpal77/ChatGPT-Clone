@@ -68,13 +68,18 @@ app.get("/server", (req, res) => {
 
 app.get("/db-test", async (req, res) => {
   try {
+    await mongoose.connect(process.env.MONGODB_URI);
+
     res.json({
       readyState: mongoose.connection.readyState,
       host: mongoose.connection.host,
       db: mongoose.connection.name,
     });
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({
+      message: err.message,
+      name: err.name,
+    });
   }
 });
 
