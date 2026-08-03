@@ -1,14 +1,16 @@
 {
   "version": 2,
-  "functions": {
-    "server.js": {
-      "runtime": "@vercel/node"
-    }
-  },
-  "routes": [
+  "name": "chat-Backend",
+  "builds": [
     {
-      "src": "/(.*)",
-      "dest": "/server.js"
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "server.js"
     }
   ]
 }
