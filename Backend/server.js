@@ -10,7 +10,10 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "*", // abhi sab allow
+    origin: [
+      "http://localhost:5173",
+      "https://chatgpt-clone-3-4c0n.onrender.com",
+    ],
   }),
 );
 app.use(morgan("dev")); // It is inbuild express middleware
@@ -18,8 +21,6 @@ app.use(morgan("dev")); // It is inbuild express middleware
 app.get("/server", (req, res) => {
   res.send("Server is working");
 });
-
-
 
 app.use("/api", chatRoutes);
 
