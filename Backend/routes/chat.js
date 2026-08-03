@@ -6,7 +6,7 @@ const router = express.Router();
 
 import mongoose from "mongoose";
 
-router.get("/thread", async (req, res) => {
+router.get("/threads", async (req, res) => {
   console.log("readyState:", mongoose.connection.readyState);
 
   try {
