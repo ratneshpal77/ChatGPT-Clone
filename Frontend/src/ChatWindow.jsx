@@ -3,6 +3,7 @@ import { ScaleLoader } from "react-spinners";
 import Chat from "./Chat.jsx";
 import "./ChatWindow.css";
 import { MyContext } from "./MyContext.jsx";
+const API = import.meta.env.VITE_API_URL;
 
 function ChatWindow() {
   const {

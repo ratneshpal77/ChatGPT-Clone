@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { v1 as uuidv1 } from "uuid";
 import { MyContext } from "./MyContext.jsx";
 import "./Sidebar.css";
+const API = import.meta.env.VITE_API_URL;
 
 function Sidebar() {
     const {allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats} = useContext(MyContext);
@@ -48,7 +49,7 @@ function Sidebar() {
 
     const deleteThread = async (threadId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/thread/${threadId}`, {method: "DELETE"});
+            const response = await fetch(`${api}/api/thread/${threadId}`, {method: "DELETE"});
             const res = await response.json();
             console.log(res);
 
