@@ -20,11 +20,14 @@ app.use("/api", chatRoutes);
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log("Connected with Database!");
+
+    console.log("✅ MongoDB Connected");
   } catch (err) {
-    console.log("Failed to connect with Db", err);
+    console.error("❌ MongoDB Error:", err);
   }
 };
+
+console.log(process.env.MONGODB_URI);
 
 const PORT = process.env.PORT || 8080;
 
