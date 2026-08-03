@@ -14,16 +14,6 @@ app.use(morgan("dev")); // It is inbuild express middleware
 
 app.use("/api", chatRoutes);
 
-// const connectDB = async () => {
-//   try {
-//     await mongoose.connect(process.env.MONGODB_URI);
-
-//     console.log("✅ MongoDB Connected");
-//   } catch (err) {
-//     console.error("❌ MongoDB Error:", err);
-//   }
-// };
-
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
