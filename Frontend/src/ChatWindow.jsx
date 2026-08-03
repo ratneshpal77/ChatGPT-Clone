@@ -3,6 +3,7 @@ import { ScaleLoader } from "react-spinners";
 import Chat from "./Chat.jsx";
 import "./ChatWindow.css";
 import { MyContext } from "./MyContext.jsx";
+const api = import.meta.env.VITE_API_URL;
 
 function ChatWindow() {
   const {
@@ -34,7 +35,7 @@ function ChatWindow() {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/chat", options);
+      const response = await fetch(`${api}/api/chat`, options);
       const res = await response.json();
       console.log(res);
       setReply(res.reply);

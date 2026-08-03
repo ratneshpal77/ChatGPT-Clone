@@ -1,5 +1,5 @@
 import "highlight.js/styles/github-dark.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import "./Chat.css";
@@ -7,75 +7,85 @@ import { MyContext } from "./MyContext";
 
 function Chat() {
   const { newChat, prevChats, reply } = useContext(MyContext);
+
   const [latestReply, setLatestReply] = useState(null);
 
+  const bottomRef = useRef(null);
+
+  // Typing Effect
   useEffect(() => {
     if (reply === null) {
-      setLatestReply(null); //prevchat load
+      setLatestReply(null);
       return;
     }
 
-    if (!prevChats?.length) return;
+    if (!prevChats.length) return;
 
-    const content = reply.split(" "); //individual words
+    const words = reply.split(" ");
 
-    let idx = 0;
+    let index = 0;
+
     const interval = setInterval(() => {
-      setLatestReply(content.slice(0, idx + 1).join(" "));
+      setLatestReply(words.slice(0, index + 1).join(" "));
 
-      idx++;
-      if (idx >= content.length) clearInterval(interval);
-    }, 40);
+      index++;
+
+      if (index >= words.length) {
+        clearInterval(interval);
+      }
+    }, 30);
 
     return () => clearInterval(interval);
-  }, [prevChats, reply]);
+  }, [reply, prevChats]);
+
+  // Auto Scroll
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [prevChats, latestReply]);
 
   return (
-    <>
-      {/* {newChat && <h1>Start a New Chat!</h1>} */}
-      {newChat && (
+    <div className="chats">
+      {newChat && prevChats.length === 0 && (
         <div className="welcome">
           <h1>How can I help you today?</h1>
           <p>
-            Ask anything about programming, AI, React, Node.js or databases.
+            Ask anything about React, Node.js, Express, MongoDB, JavaScript, DSA
+            or AI.
           </p>
         </div>
       )}
-      <div className="chats">
-        {prevChats?.slice(0, -1).map((chat, idx) => (
-          <div
-            className={chat.role === "user" ? "userDiv" : "gptDiv"}
-            key={idx}
-          >
-            {chat.role === "user" ? (
-              <p className="userMessage">{chat.content}</p>
-            ) : (
+
+      {prevChats.slice(0, -1).map((chat, index) => (
+        <div
+          key={index}
+          className={chat.role === "user" ? "userDiv" : "gptDiv"}
+        >
+          {chat.role === "user" ? (
+            <div className="userMessage">{chat.content}</div>
+          ) : (
+            <div className="markdownBody">
               <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
                 {chat.content}
               </ReactMarkdown>
-            )}
-          </div>
-        ))}
+            </div>
+          )}
+        </div>
+      ))}
 
-        {prevChats.length > 0 && (
-          <>
-            {latestReply === null ? (
-              <div className="gptDiv" key={"non-typing"}>
-                <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
-                  {prevChats[prevChats.length - 1].content}
-                </ReactMarkdown>
-              </div>
-            ) : (
-              <div className="gptDiv" key={"typing"}>
-                <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
-                  {latestReply}
-                </ReactMarkdown>
-              </div>
-            )}
-          </>
-        )}
-      </div>
-    </>
+      {prevChats.length > 0 && (
+        <div className="gptDiv">
+          <div className="markdownBody">
+            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+              {latestReply ?? prevChats[prevChats.length - 1].content}
+            </ReactMarkdown>
+          </div>
+        </div>
+      )}
+
+      <div ref={bottomRef} />
+    </div>
   );
 }
 
