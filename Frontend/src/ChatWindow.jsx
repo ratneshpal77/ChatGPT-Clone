@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { ScaleLoader } from "react-spinners";
-import Chat from "./Chat.jsx";
+import Chat from "./Chat";
 import "./ChatWindow.css";
-import { MyContext } from "./MyContext.jsx";
+import { MyContext } from "./MyContext";
+
 const api = import.meta.env.VITE_API_URL;
 
 function ChatWindow() {
@@ -14,42 +15,44 @@ function ChatWindow() {
     currThreadId,
     setPrevChats,
     setNewChat,
+    sidebarOpen,
+    setSidebarOpen,
   } = useContext(MyContext);
+
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const getReply = async () => {
+    if (!prompt.trim()) return;
+
     setLoading(true);
     setNewChat(false);
 
-    console.log("message ", prompt, " threadId ", currThreadId);
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: prompt,
-        threadId: currThreadId,
-      }),
-    };
-
     try {
-      const response = await fetch(`${api}/api/chat`, options);
+      const response = await fetch(`${api}/api/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: prompt,
+          threadId: currThreadId,
+        }),
+      });
+
       const res = await response.json();
-      console.log(res);
       setReply(res.reply);
     } catch (err) {
       console.log(err);
     }
+
     setLoading(false);
   };
 
-  //Append new chat to prevChats
   useEffect(() => {
     if (prompt && reply) {
-      setPrevChats((prevChats) => [
-        ...prevChats,
+      setPrevChats((prev) => [
+        ...prev,
         {
           role: "user",
           content: prompt,
@@ -64,39 +67,43 @@ function ChatWindow() {
     setPrompt("");
   }, [reply]);
 
-  const handleProfileClick = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <div className="chatWindow">
       <div className="navbar">
-        <span>
-          SigmaGPT <i className="fa-solid fa-chevron-down"></i>
-        </span>
-        <div className="userIconDiv" onClick={handleProfileClick}>
-          <span className="userIcon">
+        <div className="navLeft">
+          <i
+            className="fa-solid fa-bars menuIcon"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          ></i>
+
+          <span>SigmaGPT</span>
+        </div>
+
+        <div className="userIconDiv">
+          <div className="userIcon" onClick={() => setIsOpen(!isOpen)}>
             <i className="fa-solid fa-user"></i>
-          </span>
+          </div>
         </div>
       </div>
+
       {isOpen && (
         <div className="dropDown">
           <div className="dropDownItem">
-            <i class="fa-solid fa-gear"></i> Settings
+            <i className="fa-solid fa-gear"></i>
+            Settings
           </div>
+
           <div className="dropDownItem">
-            <i class="fa-solid fa-cloud-arrow-up"></i> Upgrade plan
+            <i className="fa-solid fa-cloud-arrow-up"></i>
+            Upgrade Plan
           </div>
+
           <div className="dropDownItem">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i> Log out
+            <i className="fa-solid fa-arrow-right-from-bracket"></i>
+            Logout
           </div>
         </div>
       )}
-      {/* <Chat></Chat>
-            <ScaleLoader color="#fff" loading={loading}>
-            </ScaleLoader>
-            <div className="chatInput"> */}
 
       <div className="chatContent">
         <Chat />
@@ -111,18 +118,19 @@ function ChatWindow() {
       <div className="chatInput">
         <div className="inputBox">
           <input
-            placeholder="Ask anything"
+            placeholder="Ask anything..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            onKeyDown={(e) => (e.key === "Enter" ? getReply() : "")}
-          ></input>
-          <div id="submit" onClick={getReply}>
+            onKeyDown={(e) => e.key === "Enter" && getReply()}
+          />
+
+          <button id="submit" onClick={getReply}>
             <i className="fa-solid fa-paper-plane"></i>
-          </div>
+          </button>
         </div>
+
         <p className="info">
-          SigmaGPT can make mistakes. Check important info. See Cookie
-          Preferences.
+          SigmaGPT can make mistakes. Verify important information.
         </p>
       </div>
     </div>

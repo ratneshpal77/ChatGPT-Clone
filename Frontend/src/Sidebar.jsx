@@ -1,101 +1,124 @@
 import { useContext, useEffect } from "react";
 import { v1 as uuidv1 } from "uuid";
-import { MyContext } from "./MyContext.jsx";
+import { MyContext } from "./MyContext";
 import "./Sidebar.css";
+import logo from "./assets/blacklogo.png";
+
 const api = import.meta.env.VITE_API_URL;
 
 function Sidebar() {
-    const {allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats} = useContext(MyContext);
+  const {
+    allThreads,
+    setAllThreads,
+    currThreadId,
+    setNewChat,
+    setPrompt,
+    setReply,
+    setCurrThreadId,
+    setPrevChats,
+    sidebarOpen,
+    setSidebarOpen,
+  } = useContext(MyContext);
 
-    const getAllThreads = async () => {
-        try {
-            const response = await fetch(`${api}/api/thread`);
-            const res = await response.json();
-            const filteredData = res.map(thread => ({threadId: thread.threadId, title: thread.title}));
-            //console.log(filteredData);
-            setAllThreads(filteredData);
-        } catch(err) {
-            console.log(err);
-        }
+  const getAllThreads = async () => {
+    try {
+      const response = await fetch(`${api}/api/thread`);
+      const res = await response.json();
+
+      const filtered = res.map((thread) => ({
+        threadId: thread.threadId,
+        title: thread.title,
+      }));
+
+      setAllThreads(filtered);
+    } catch (err) {
+      console.log(err);
     }
-    useEffect(() => {
-        getAllThreads();
-    }, [currThreadId])
+  };
 
+  useEffect(() => {
+    getAllThreads();
+  }, [currThreadId]);
 
-    const createNewChat = () => {
-        setNewChat(true);
-        setPrompt("");
-        setReply(null);
-        setCurrThreadId(uuidv1());
-        setPrevChats([]);
+  const createNewChat = () => {
+    setNewChat(true);
+    setPrompt("");
+    setReply(null);
+    setCurrThreadId(uuidv1());
+    setPrevChats([]);
+    setSidebarOpen(false);
+  };
+
+  const changeThread = async (threadId) => {
+    setCurrThreadId(threadId);
+
+    try {
+      const response = await fetch(`${api}/api/thread/${threadId}`);
+      const res = await response.json();
+
+      setPrevChats(res);
+      setReply(null);
+      setNewChat(false);
+      setSidebarOpen(false);
+    } catch (err) {
+      console.log(err);
     }
+  };
 
-    const changeThread = async (newThreadId) => {
-        setCurrThreadId(newThreadId);
+  const deleteThread = async (threadId) => {
+    try {
+      await fetch(`${api}/api/thread/${threadId}`, {
+        method: "DELETE",
+      });
 
-        try {
-            const response = await fetch(`${api}/api/thread/${newThreadId}`);
-            const res = await response.json();
-            console.log(res);
-            setPrevChats(res);
-            setNewChat(false);
-            setReply(null);
-        } catch(err) {
-            console.log(err);
-        }
-    }   
+      setAllThreads((prev) =>
+        prev.filter((thread) => thread.threadId !== threadId),
+      );
 
-    const deleteThread = async (threadId) => {
-        try {
-            const response = await fetch(`${api}/api/thread/${threadId}`, {method: "DELETE"});
-            const res = await response.json();
-            console.log(res);
-
-            //updated threads re-render
-            setAllThreads(prev => prev.filter(thread => thread.threadId !== threadId));
-
-            if(threadId === currThreadId) {
-                createNewChat();
-            }
-
-        } catch(err) {
-            console.log(err);
-        }
+      if (threadId === currThreadId) {
+        createNewChat();
+      }
+    } catch (err) {
+      console.log(err);
     }
+  };
 
-    return (
-        <section className="sidebar">
-            <button onClick={createNewChat}>
-                <img src="src/assets/blacklogo.png" alt="gpt logo" className="logo"></img>
-                <span><i className="fa-solid fa-pen-to-square"></i></span>
-            </button>
+  return (
+    <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+      <div className="sidebarTop">
+        <button onClick={createNewChat}>
+          <img src={logo} className="logo" alt="logo" />
+          <span>
+            <i className="fa-solid fa-pen-to-square"></i>
+          </span>
+        </button>
+      </div>
 
+      <ul className="history">
+        {allThreads?.map((thread) => (
+          <li
+            key={thread.threadId}
+            onClick={() => changeThread(thread.threadId)}
+            className={thread.threadId === currThreadId ? "highlighted" : ""}
+          >
+            <span className="threadTitle">{thread.title}</span>
 
-            <ul className="history">
-                {
-                    allThreads?.map((thread, idx) => (
-                        <li key={idx} 
-                            onClick={(e) => changeThread(thread.threadId)}
-                            className={thread.threadId === currThreadId ? "highlighted": " "}
-                        >
-                            {thread.title}
-                            <i className="fa-solid fa-trash"
-                                onClick={(e) => {
-                                    e.stopPropagation(); //stop event bubbling
-                                    deleteThread(thread.threadId);
-                                }}
-                            ></i>
-                        </li>
-                    ))
-                }
-            </ul>
- 
-            <div className="sign">
-                <p>Made By RATNESH PAL &hearts;</p>
-            </div>
-        </section>
-    )
+            <i
+              className="fa-solid fa-trash"
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteThread(thread.threadId);
+              }}
+            ></i>
+          </li>
+        ))}
+      </ul>
+
+      <div className="sign">
+        <p>Made By Ratnesh Pal ❤️</p>
+      </div>
+    </aside>
+  );
 }
 
 export default Sidebar;

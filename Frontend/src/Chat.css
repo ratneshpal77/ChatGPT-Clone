@@ -1,98 +1,70 @@
-/* ========================= */
-/* Chat Container */
-/* ========================= */
+/* ===========================
+   Chat Container
+=========================== */
 
 .chats {
-  flex: 1;
   width: 100%;
   max-width: 900px;
-
-  margin: 0 auto;
-
-  padding: 32px 24px 40px;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  scroll-behavior: smooth;
-
+  margin: auto;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
   box-sizing: border-box;
 }
 
-.chats::-webkit-scrollbar {
-  width: 8px;
-}
-
-.chats::-webkit-scrollbar-thumb {
-  background: #3b3b3b;
-  border-radius: 20px;
-}
-
-.chats::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* ========================= */
-/* Welcome */
-/* ========================= */
+/* ===========================
+   Welcome
+=========================== */
 
 .welcome {
+  width: 100%;
   text-align: center;
-  margin-top: 90px;
+  margin-top: 80px;
 }
 
 .welcome h1 {
   font-size: 42px;
   font-weight: 700;
-  margin-bottom: 12px;
+  color: white;
 }
 
 .welcome p {
+  margin-top: 12px;
   color: #9d9d9d;
   font-size: 16px;
 }
 
-/* ========================= */
-/* User Message */
-/* ========================= */
+/* ===========================
+   User Message
+=========================== */
 
 .userDiv {
   display: flex;
   justify-content: flex-end;
-  margin: 22px 0;
 }
 
 .userMessage {
   max-width: 75%;
-
   background: #2f2f2f;
-
+  color: white;
   padding: 14px 18px;
-
   border-radius: 18px;
-
   line-height: 1.7;
-
   font-size: 15px;
-
   white-space: pre-wrap;
-  word-wrap: break-word;
   overflow-wrap: break-word;
+  word-break: break-word;
 }
 
-/* ========================= */
-/* GPT Message */
-/* ========================= */
+/* ===========================
+   GPT Message
+=========================== */
 
 .gptDiv {
   display: flex;
   align-items: flex-start;
-
   gap: 14px;
-
-  margin: 26px 0;
-
-  width: 100%;
 }
 
 .gptDiv::before {
@@ -110,144 +82,96 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-  font-size: 18px;
 }
 
-.gptDiv > * {
-  flex: 1;
-
+.markdownBody {
+  width: 100%;
   min-width: 0;
-
   color: #ececec;
-
   line-height: 1.8;
-
-  font-size: 15px;
-
   overflow-wrap: break-word;
-  word-break: break-word;
 }
 
-/* ========================= */
-/* Markdown */
-/* ========================= */
+/* ===========================
+   Markdown
+=========================== */
 
-.gptDiv h1,
-.gptDiv h2,
-.gptDiv h3,
-.gptDiv h4 {
-  margin-top: 22px;
-  margin-bottom: 12px;
+.markdownBody h1,
+.markdownBody h2,
+.markdownBody h3,
+.markdownBody h4 {
+  margin: 20px 0 12px;
 }
 
-.gptDiv p {
-  margin: 10px 0;
+.markdownBody p {
+  margin: 12px 0;
 }
 
-.gptDiv ul,
-.gptDiv ol {
-  margin: 10px 0;
+.markdownBody ul,
+.markdownBody ol {
+  margin: 12px 0;
   padding-left: 24px;
 }
 
-.gptDiv li {
+.markdownBody li {
   margin: 6px 0;
 }
 
-.gptDiv strong {
+.markdownBody strong {
   color: white;
 }
 
-.gptDiv a {
+.markdownBody a {
   color: #10a37f;
   text-decoration: none;
 }
 
-.gptDiv a:hover {
-  text-decoration: underline;
-}
-
-/* ========================= */
-/* Images */
-/* ========================= */
-
-.gptDiv img {
+.markdownBody img {
   max-width: 100%;
-
   border-radius: 12px;
-
-  margin: 15px 0;
 }
 
-/* ========================= */
-/* Inline Code */
-/* ========================= */
+/* ===========================
+   Inline Code
+=========================== */
 
 :not(pre) > code {
-  background: #2e2e2e;
-
-  padding: 2px 6px;
-
+  background: #303030;
+  padding: 3px 6px;
   border-radius: 6px;
-
-  font-family: Consolas, monospace;
-
-  font-size: 14px;
 }
 
-/* ========================= */
-/* Code Block */
-/* ========================= */
+/* ===========================
+   Code Block
+=========================== */
 
 pre {
   background: #111827 !important;
-
-  padding: 18px;
-
   border-radius: 14px;
-
+  padding: 18px;
   overflow-x: auto;
-
-  margin: 18px 0;
-}
-
-pre::-webkit-scrollbar {
-  height: 8px;
-}
-
-pre::-webkit-scrollbar-thumb {
-  background: #444;
 }
 
 pre code {
   background: transparent;
-
   padding: 0;
 }
 
-/* ========================= */
-/* Tables */
-/* ========================= */
+/* ===========================
+   Table
+=========================== */
 
 table {
-  display: block;
-
   width: 100%;
-
-  overflow-x: auto;
-
   border-collapse: collapse;
-
-  margin: 18px 0;
+  display: block;
+  overflow-x: auto;
 }
 
 th,
 td {
   border: 1px solid #404040;
-
-  padding: 10px 14px;
-
+  padding: 10px;
   white-space: nowrap;
 }
 
@@ -255,33 +179,28 @@ th {
   background: #2f2f2f;
 }
 
-/* ========================= */
-/* Blockquote */
-/* ========================= */
+/* ===========================
+   Blockquote
+=========================== */
 
 blockquote {
   border-left: 4px solid #10a37f;
-
-  margin: 18px 0;
-
   padding-left: 16px;
-
-  color: #bdbdbd;
+  color: #bcbcbc;
+  margin: 16px 0;
 }
 
-/* ========================= */
-/* Highlight.js */
-/* ========================= */
+/* ===========================
+   Highlight
+=========================== */
 
 .hljs {
   background: transparent !important;
-
-  border-radius: 10px;
 }
 
-/* ========================= */
-/* Animation */
-/* ========================= */
+/* ===========================
+   Animation
+=========================== */
 
 .userDiv,
 .gptDiv {
@@ -300,17 +219,42 @@ blockquote {
   }
 }
 
-/* ========================= */
-/* Responsive */
-/* ========================= */
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width: 992px) {
+  .chats {
+    max-width: 100%;
+    padding: 25px 18px;
+  }
+}
 
 @media (max-width: 768px) {
   .chats {
-    padding: 20px 14px 30px;
+    padding: 18px 14px;
+
+    gap: 20px;
+  }
+
+  .welcome {
+    margin-top: 50px;
+  }
+
+  .welcome h1 {
+    font-size: 30px;
+  }
+
+  .welcome p {
+    font-size: 14px;
   }
 
   .userMessage {
-    max-width: 90%;
+    max-width: 95%;
+
+    font-size: 14px;
+
+    padding: 12px 15px;
   }
 
   .gptDiv {
@@ -318,35 +262,49 @@ blockquote {
   }
 
   .gptDiv::before {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
 
     font-size: 15px;
   }
 
-  .welcome h1 {
-    font-size: 30px;
-  }
-
-  table {
+  .markdownBody {
     font-size: 14px;
   }
 
   pre {
+    padding: 14px;
+
+    font-size: 13px;
+  }
+
+  table {
     font-size: 13px;
   }
 }
 
-.markdownBody {
-  width: 100%;
-  max-width: 760px;
-  overflow-x: auto;
-}
+@media (max-width: 480px) {
+  .chats {
+    padding: 14px 10px;
+  }
 
-.markdownBody > *:first-child {
-  margin-top: 0;
-}
+  .userMessage {
+    max-width: 100%;
+  }
 
-.markdownBody > *:last-child {
-  margin-bottom: 0;
+  .welcome h1 {
+    font-size: 24px;
+  }
+
+  .welcome p {
+    font-size: 13px;
+  }
+
+  .markdownBody {
+    font-size: 13px;
+  }
+
+  pre {
+    font-size: 12px;
+  }
 }
